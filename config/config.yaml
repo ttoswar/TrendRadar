@@ -120,12 +120,31 @@ rss:
     - id: "ruanyifeng"
       name: "阮一峰的网络日志"
       url: "http://www.ruanyifeng.com/blog/atom.xml"
-      enabled: false                  # 禁用
-      # max_age_days: 3               # 示例：推送 3 天内的文章（更新较慢的博客）
-     
+      enabled: false
+
     - id: "yahoo-finance"
       name: "雅虎财经"
       url: "https://finance.yahoo.com/news/rssindex"
+
+    - id: "gold"
+      name: "黄金"
+      url: "https://www.bing.com/news/search?q=黄金价格+走势&format=RSS"
+
+    - id: "code"
+      name: "编程"
+      url: "https://www.bing.com/news/search?q=科技+编程&format=RSS"
+
+    - id: "ai"
+      name: "人工智能"
+      url: "https://www.bing.com/news/search?q=人工智能&format=RSS"
+
+    - id: "news"
+      name: "新闻"
+      url: "https://www.bing.com/news/search?q=全球新闻&format=RSS"
+
+
+
+
 
     # 自定义源示例
     # - id: "custom-feed"
@@ -151,7 +170,7 @@ rss:
 # - incremental：最少打扰，只看新增
 # ===============================================================
 report:
-  mode: "current"                     # daily | current | incremental（schedule 开启时作为默认值）
+  mode: "incremental"                     # daily | current | incremental（schedule 开启时作为默认值）
 
   display_mode: "keyword"             # 分组维度: keyword | platform
                                       # keyword: 按关键词分组显示（默认）
@@ -251,35 +270,20 @@ display:
   #   1. 在此列表中
   #   2. 下方 regions 中对应开关为 true
   region_order:
-    - new_items                           # 1️⃣ 新增热点区域
-    - hotlist                             # 2️⃣ 热榜区域（关键词匹配 / AI 智能筛选）
-    - rss                                 # 3️⃣ RSS 订阅区域
-    - standalone                          # 4️⃣ 独立展示区
-    - ai_analysis                         # 5️⃣ AI 分析区域
-
-  # 推送区域开关
-  # 控制各区域是否启用（配合 region_order 使用）
+    - rss                       # 3️⃣ RSS 订阅区域
+    - new_items                       # 1️⃣ 新增热点区域
+    - ai_analysis                       # 5️⃣ AI 分析区域
+    - hotlist                       # 2️⃣ 热榜区域（关键词匹配 / AI 智能筛选）
+    - standalone                       # 4️⃣ 独立展示区
   regions:
-    hotlist: true                     # 热榜区域（关键词匹配 / AI 智能筛选）
-    new_items: false                   # 新增热点区域（含热榜新增 + RSS 新增）
-                                      # 注：热点词汇统计中的新增标记🆕不受此配置影响
-
-    rss: true                         # RSS 订阅区域
-                                      # 开启后将对 RSS 进行关键词分析并在通知中展示
-                                      # 关闭后跳过分析，但独立展示区不受影响
-
-    standalone: false                 # 独立展示区（完整热榜/RSS，不受关键词过滤）
-    ai_analysis: true                 # AI 分析区域
-
-  # 📋 独立展示区配置
-  # 用途：将指定平台的完整热榜/RSS 数据独立提取，不受关键词过滤影响
-  # 两个独立用途：
-  #   - 推送展示：由 regions.standalone 开关控制，在推送中单独展示完整热榜
-  #   - AI 分析：由 ai_analysis.include_standalone 开关控制，将完整数据送入 AI 做深度分析
-  # 两者共享此处的平台/RSS 配置，但开关互相独立（可只开 AI 分析、不推送展示）
+    rss: true # RSS 订阅区域
+    new_items: true # 新增热点区域（含热榜新增 + RSS 新增）
+    ai_analysis: true # AI 分析区域
+    hotlist: true # 热榜区域（关键词匹配 / AI 智能筛选）
+    standalone: false # 独立展示区（完整热榜/RSS，不受关键词过滤）
   standalone:
-    platforms: ["zhihu", "wallstreetcn-hot"]     # 热榜平台 ID 列表（如 ["zhihu", "weibo"]）
-    rss_feeds: []                     # RSS 源 ID 列表（如 ["hacker-news"]）
+    platforms: [] # 热榜平台 ID 列表（如 ["zhihu", "weibo"]）
+    rss_feeds: ["gold"] # RSS 源 ID 列表（如 ["hacker-news"]）
     max_items: 20                     # 每个源最多展示条数（0=不限制）
 
 
@@ -507,7 +511,7 @@ ai_analysis:
                                       # GitHub Action 部署默认推送约 20 次（每小时推送一次）， 约 0.1 元/天
                                       # Docker 部署默认推送 48 次(每半小时推送一次)， 约 0.2 元/天
 
-  include_rss: false                # 是否包含 RSS 内容进行分析
+  include_rss: true                # 是否包含 RSS 内容进行分析
   
   include_standalone: true          # 是否将独立展示区数据纳入 AI 分析
                                     # 数据源列表来自 display.standalone.platforms / display.standalone.rss_feeds
